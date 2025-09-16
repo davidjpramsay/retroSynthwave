@@ -1,20 +1,52 @@
-# Retro Synthwave
+# Retro Synthwave (SwiftUI)
 
-![screenshot](screenshot.png)
+A SwiftUI re-imagining of the original Retro Synthwave background. The project now ships as a Swift Package that exposes a drop-in `SynthwaveBackgroundView`, making it easy to embed the animated grid and sun effect inside your iOS or macOS apps.
 
-[live version](https://victorribeiro.com/random4)  
-[alternative link](https://victorqribeiro.github.io/retroSynthwave/)  
+## Requirements
 
-## About
+- iOS 15.0+ or macOS 12.0+
+- Xcode 14 or newer
 
-This is a project I've been working on for a while, one hour or less at at time. It involves a simple equation for calculating a perspective of a given point `FOV / (FOV + z)` Where FOV is the Field of View and z is the z coordinate of a given 3D point (x, y, z).
+## Getting Started
 
-### Can I use it on my videos?
-Yes, set up a record screen software and capture away.
-E.g.: [https://www.youtube.com/watch?v=ztv--KzSGDc](https://www.youtube.com/watch?v=ztv--KzSGDc)
+1. In Xcode, go to **File ▸ Add Packages…** and add this repository URL.
+2. Add the **RetroSynthwave** product to your target.
+3. Import the package from Swift code:
 
-### Can I use it as a backgroud?
-Yes, press F11 to enter full screen mode, reload the page and take a screen shot.
+```swift
+import RetroSynthwave
+```
 
-### Can this turned into a endless GIF?
-Yes, comment out the part where I reset the y position last row of points after they are gone, capture the frames and you're all set.
+## Usage
+
+Embed the view anywhere you need an animated background:
+
+```swift
+import SwiftUI
+import RetroSynthwave
+
+struct ContentView: View {
+    var body: some View {
+        SynthwaveBackgroundView()
+            .overlay(
+                Text("Hello, Neo")
+                    .font(.largeTitle.weight(.bold))
+                    .foregroundColor(.white)
+                    .shadow(radius: 10)
+            )
+            .ignoresSafeArea()
+    }
+}
+```
+
+`SynthwaveBackgroundView` renders an animated horizon grid, a glowing sun and the vertical gradient sky. It is designed to cover the entire window, so combining it with `.ignoresSafeArea()` is recommended when using it as a backdrop.
+
+## Implementation Notes
+
+- The 3D projection math mirrors the original web implementation, using the perspective factor `focalLength / (focalLength + z)`.
+- Animation timing is driven by `TimelineView`, which keeps the SwiftUI view in sync with the `SynthwaveViewModel` that manages the points in the grid.
+- The effect is completely self-contained; no additional assets or shaders are required.
+
+## Credits
+
+This SwiftUI port is based on the JavaScript Retro Synthwave experiment created by Victor Ribeiro. The original repository has been converted so the effect can be consumed from Swift-based projects.
