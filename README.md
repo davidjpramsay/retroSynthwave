@@ -1,20 +1,70 @@
 # Retro Synthwave
 
-![screenshot](screenshot.png)
+SwiftUI background effect inspired by the classic neon-grid horizon. `RetroSynthwave` exposes
+`SynthwaveBackgroundView`, a drop-in view that renders the animated grid, rising sun, and
+gradient sky entirely in code—perfect for title screens, looping backgrounds, or ambient
+visuals inside your own apps.
 
-[live version](https://victorribeiro.com/random4)  
-[alternative link](https://victorqribeiro.github.io/retroSynthwave/)  
+## Requirements
 
-## About
+- iOS 15.0 or macOS 12.0
+- Xcode 14 or newer
 
-This is a project I've been working on for a while, one hour or less at at time. It involves a simple equation for calculating a perspective of a given point `FOV / (FOV + z)` Where FOV is the Field of View and z is the z coordinate of a given 3D point (x, y, z).
+## Installation
 
-### Can I use it on my videos?
-Yes, set up a record screen software and capture away.
-E.g.: [https://www.youtube.com/watch?v=ztv--KzSGDc](https://www.youtube.com/watch?v=ztv--KzSGDc)
+1. In Xcode, open **File ▸ Add Packages…** and paste this repository URL.
+2. Select the **RetroSynthwave** library product and add it to your target.
+3. Import the package wherever you need the background:
 
-### Can I use it as a backgroud?
-Yes, press F11 to enter full screen mode, reload the page and take a screen shot.
+   ```swift
+   import RetroSynthwave
+   ```
 
-### Can this turned into a endless GIF?
-Yes, comment out the part where I reset the y position last row of points after they are gone, capture the frames and you're all set.
+## Usage
+
+`SynthwaveBackgroundView` fills its container, so combining it with
+`.ignoresSafeArea()` keeps the animation edge-to-edge.
+
+```swift
+import SwiftUI
+import RetroSynthwave
+
+struct ContentView: View {
+    var body: some View {
+        SynthwaveBackgroundView()
+            .overlay(alignment: .center) {
+                VStack(spacing: 12) {
+                    Text("Welcome to the Grid")
+                        .font(.system(size: 42, weight: .heavy))
+                        .foregroundColor(.white)
+                        .shadow(color: .pink.opacity(0.8), radius: 12)
+
+                    Text("Tap anywhere to begin")
+                        .font(.title3)
+                        .foregroundColor(.white.opacity(0.85))
+                }
+            }
+            .ignoresSafeArea()
+    }
+}
+```
+
+## Customisation
+
+`SynthwaveViewModel` drives the animation and can be tweaked for different looks:
+
+- **columns / rows** – grid resolution. Higher counts produce denser meshes.
+- **spacing / depthSpacing** – distance between points along the X and Z axes.
+- **focalLength** – adjusts perspective strength; larger values flatten the grid.
+- **zSpeed** – scroll speed towards the camera.
+- **maxDepth** – how far rows travel before they recycle to the front.
+
+Initialisers expose sensible defaults, so many apps can stick with the provided
+`SynthwaveBackgroundView`. For bespoke layouts you can instantiate `SynthwaveViewModel`
+directly and pass it into a customised SwiftUI `Canvas`.
+
+## Credits
+
+Ported to SwiftUI from Victor Ribeiro's Retro Synthwave experiment. This branch focuses on
+the SwiftUI implementation, while the original JavaScript prototype lives on at
+[victorribeiro.com/random4](https://victorribeiro.com/random4).
